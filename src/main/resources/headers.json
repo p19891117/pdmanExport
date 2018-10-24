@@ -1,0 +1,26 @@
+[
+	{
+		"fieldName": "chnname",
+		"relationNoShow": false
+	},
+	{
+		"fieldName": "name",
+		"relationNoShow": false
+	},
+	{
+		"fieldName": "type",
+		"relationNoShow": false
+	},
+	{
+		"fieldName": "remark",
+		"relationNoShow": true
+	},
+	{
+		"fieldName": "pk",
+		"relationNoShow": false
+	},
+	{
+		"fieldName": "relationNoShow",
+		"relationNoShow": false
+	}
+]
