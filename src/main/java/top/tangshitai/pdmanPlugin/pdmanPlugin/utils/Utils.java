@@ -1,7 +1,10 @@
 package top.tangshitai.pdmanPlugin.pdmanPlugin.utils;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
@@ -24,7 +27,14 @@ public class Utils {
 	public static StringBuilder readFileContent(String name) throws IOException {
 		Reader reader = null;
 		try {
-			reader = new InputStreamReader(App.class.getClassLoader().getResourceAsStream(name), "UTF-8");
+			InputStream in = null;
+			File file = new File(name);
+			if(file.exists()&&file.isFile()) {
+				in = new  FileInputStream(file);
+			}else {
+				in = App.class.getClassLoader().getResourceAsStream(name);
+			}
+			reader = new InputStreamReader(in, "UTF-8");
 			StringBuilder sb = new StringBuilder();
 			int len = -1;
 			char[] buffer = new char[1024 * 10];

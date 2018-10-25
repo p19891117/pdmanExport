@@ -8,21 +8,22 @@ import com.alibaba.fastjson.JSONObject;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Module;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.PDMan;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.stategrid.StateGrid;
+import top.tangshitai.pdmanPlugin.pdmanPlugin.utils.SqlUtils;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.utils.Utils;
 
 
 public class App {
 	public static void main(String[] args) throws IOException {
-		test1();
+		stategrid();
 	}
-	public static void test1() throws IOException {
+	private static void stategrid() throws IOException {
 		JSONObject jobj = (JSONObject) JSONObject.parse(Utils.readFileContent("module.pdman.json").toString());
 		PDMan pdman = jobj.toJavaObject(PDMan.class);
 		StateGrid sg = new StateGrid();
 		List<Module> modules = sg.builderModules(pdman);
 		pdman.setModules(modules);
 		String result = JSONObject.toJSONString(pdman);
-		Utils.writeFileContent("stategrid.pdman.json", result);
+		SqlUtils.processType("stategrid.pdman.json",result);
 	}
 	
 	

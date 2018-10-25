@@ -8,7 +8,7 @@ public class Field {
 	private String[] fk;
 	private boolean pk = false;
 	private boolean notNull =false;
-	private boolean relationNoShow;
+	private boolean relationNoShow = false;
 	
 	public Field() {
 		super();

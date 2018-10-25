@@ -73,6 +73,11 @@ public class SqlUtils {
 				field.setFk(getForeignKey(tablename, m.group(1)));
 				if(field.isPk())
 					field.setNotNull(true);
+				if("备注".equals(field.getChnname())||"是否有效".equals(field.getChnname())||
+						"创建时间".equals(field.getChnname())||"最后修改人".equals(field.getChnname())||
+						"创建人".equals(field.getChnname())||"最后修改时间".equals(field.getChnname())) {
+					field.setRelationNoShow(true);
+				}
 				fields.add(field);
 			}else {
 				throw new IllegalArgumentException("数据表结构分割后的某列格式不正确:"+fieldsStr);
@@ -187,5 +192,38 @@ public class SqlUtils {
 		}else {
 			throw new IllegalArgumentException("不合法参数类型:"+sqlType);
 		}
+	}
+	
+	public static void processType(String filename,String content) {
+		try {
+			int[] indexs = new int[100];
+			//String content  = Utils.readFileContent(filename).toString();
+			Pattern p = Pattern.compile("jAVA|oRACLE|mYSQL\":(\\{\"type\":\"[\\w\\d\\(\\)\\[\\]\\,_]+\"\\})");
+			Matcher m = p.matcher(content);
+			int x = 0;
+			while(m.find()) {
+				indexs[x]=m.start();
+				x++;
+			}
+			StringBuilder sb = new StringBuilder(content);
+			for(int index:indexs) {
+				if(index==0)continue;
+				char ch = sb.charAt(index);
+				if(ch=='j') {
+					sb = sb.replace(index, index+1, "J");
+				}else if(ch=='m') {
+					sb = sb.replace(index, index+1, "M");
+				}else if(ch=='o') {
+					sb = sb.replace(index, index+1, "O");
+				}else {
+					throw new RuntimeException("替换类型字符不存在"+ch);
+				}
+			}
+			Utils.writeFileContent(filename, sb.toString());
+		} catch (IOException e) {
+			System.out.println("处理最终结果出错,程序停止");
+			System.exit(0);
+		}
+		
 	}
 }

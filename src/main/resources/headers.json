@@ -1,26 +1,42 @@
 [
 	{
-		"fieldName": "chnname",
-		"relationNoShow": false
+	  "fieldName": "chnname",
+	  "relationNoShow": false
 	},
 	{
-		"fieldName": "name",
-		"relationNoShow": false
+	  "fieldName": "name",
+	  "relationNoShow": false
 	},
 	{
-		"fieldName": "type",
-		"relationNoShow": false
+	  "fieldName": "type",
+	  "relationNoShow": true
 	},
 	{
-		"fieldName": "remark",
-		"relationNoShow": true
+	  "fieldName": "remark",
+	  "relationNoShow": true
 	},
 	{
-		"fieldName": "pk",
-		"relationNoShow": false
+	  "fieldName": "pk",
+	  "relationNoShow": true
 	},
 	{
-		"fieldName": "relationNoShow",
-		"relationNoShow": false
+	  "fieldName": "relationNoShow",
+	  "relationNoShow": false
+	},
+	{
+	  "fieldName": "dataType",
+	  "relationNoShow": true
+	},
+	{
+	  "fieldName": "notNull",
+	  "relationNoShow": true
+	},
+	{
+	  "fieldName": "autoIncrement",
+	  "relationNoShow": true
+	},
+	{
+	  "fieldName": "defaultValue",
+	  "relationNoShow": true
 	}
 ]
