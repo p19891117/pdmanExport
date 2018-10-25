@@ -3,6 +3,7 @@ package top.tangshitai.pdmanPlugin.pdmanPlugin.bean;
 public class Node {
 	private String shape;
 	private String title;
+	private boolean moduleName = false;
 	private long x;
 	private long y;
 	private String id;
@@ -35,6 +36,12 @@ public class Node {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	public boolean isModuleName() {
+		return moduleName;
+	}
+	public void setModuleName(boolean moduleName) {
+		this.moduleName = moduleName;
 	}
 	
 }

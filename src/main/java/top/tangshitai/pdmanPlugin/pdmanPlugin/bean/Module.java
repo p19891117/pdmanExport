@@ -6,7 +6,7 @@ import java.util.List;
 public class Module {
 	private String name;
     private List<Entitie> entities = new ArrayList<>();
-    private GraphCanvas graphCanvas;
+    private GraphCanvas graphCanvas = new GraphCanvas();
     private List<Association> associations;
 	public String getName() {
 		return name;

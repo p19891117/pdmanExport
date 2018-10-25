@@ -5,6 +5,7 @@ public class Field {
 	private String type;
 	private String remark;
 	private String chnname;
+	private String[] fk;
 	private boolean pk = false;
 	private boolean notNull =false;
 	private boolean relationNoShow;
@@ -23,6 +24,14 @@ public class Field {
 		this.pk = pk;
 		this.notNull = notNull;
 		this.relationNoShow = relationNoShow;
+	}
+
+	public String[] getFk() {
+		return fk;
+	}
+
+	public void setFk(String[] fk) {
+		this.fk = fk;
 	}
 
 	public String getName() {

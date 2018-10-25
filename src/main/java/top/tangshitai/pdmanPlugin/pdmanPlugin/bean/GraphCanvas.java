@@ -1,9 +1,10 @@
 package top.tangshitai.pdmanPlugin.pdmanPlugin.bean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GraphCanvas {
-	private List<Node> nodes;
+	private List<Node> nodes = new ArrayList<>();
 	private List<Edge> edges;
 	public List<Node> getNodes() {
 		return nodes;

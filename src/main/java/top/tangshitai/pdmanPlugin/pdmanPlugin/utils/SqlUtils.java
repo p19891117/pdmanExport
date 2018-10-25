@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Entitie;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Field;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Module;
+import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Node;
 
 public class SqlUtils {
 	public static StringBuilder sb = null;
@@ -60,6 +61,7 @@ public class SqlUtils {
 				field.setType(sqlTypeToPdmanType(m.group(2)));
 				field.setChnname(getComment(tablename,m.group(1)));
 				field.setPk(getPrimaryKey(tablename, m.group(1)));
+				field.setFk(getForeignKey(tablename, m.group(1)));
 				if(field.isPk())
 					field.setNotNull(true);
 				fields.add(field);
@@ -100,13 +102,24 @@ public class SqlUtils {
 		for(Module m:modules) {
 			if(m.getName().equals(modulename)) {
 				m.getEntities().add(e);
+				m.getGraphCanvas().getNodes().add(builderNode(e.getTitle()));
 				return;
 			}
 		}
 		Module module = new Module();
 		module.setName(modulename);
 		module.getEntities().add(e);
+		module.getGraphCanvas().getNodes().add(builderNode(e.getTitle()));
 		modules.add(module);
+	}
+	private static Node builderNode(String tableName) {
+		Node node = new Node();
+		node.setShape("table");
+		node.setTitle(tableName);
+		node.setId(Utils.genShortUuid());
+		node.setX(434);
+		node.setY(80);
+		return node;
 	}
 	private static String getComment(String tablename,String fieldname) {
 		String reg = "COMMENT ON COLUMN \"stategrid\"\\.\""+tablename+"\"\\.\""+fieldname+"\" IS '([^']+)';";
@@ -127,6 +140,19 @@ public class SqlUtils {
 			return true;
 		}
 		return false;
+	}
+	private static String[] getForeignKey(String tablename,String fieldname) {
+		String reg = "ALTER TABLE \"stategrid\"\\.\""+tablename+"\" ADD CONSTRAINT \"([\\w\\d_]+)\" FOREIGN KEY \\(\""+fieldname+"\"\\) REFERENCES \"stategrid\".\"([\\w\\d_]+)\" \\(\"([\\w\\d_]+)\"\\)";
+		//ALTER TABLE "stategrid"."t_levt_skill_expert" ADD CONSTRAINT "fk_t_levt_s_reference_t_levt_e" FOREIGN KEY ("f_parent_pid") REFERENCES "stategrid"."t_levt_expert" ("f_pid")
+		Pattern p = Pattern.compile(reg);
+		Matcher m = p.matcher(sb.toString());
+		if(tablename.equals("t_run_carddetail")&&fieldname.equals("f_card_pid")) {
+			System.out.println();
+		}
+		if(m.find()) {
+			return new String[]{tablename,fieldname,m.group(2),m.group(3)};
+		}
+		return null;
 	}
 	private static  String sqlTypeToPdmanType(String sqlType) {
 		if("varchar".equals(sqlType)) {

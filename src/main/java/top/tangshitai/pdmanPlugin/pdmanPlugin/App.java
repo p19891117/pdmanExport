@@ -16,7 +16,7 @@ public class App {
 		test1();
 	}
 	public static void test1() throws IOException {
-		JSONObject jobj = (JSONObject) JSONObject.parse(Utils.readFileContent("stategrid.pdman.json").toString());
+		JSONObject jobj = (JSONObject) JSONObject.parse(Utils.readFileContent("module.pdman.json").toString());
 		PDMan pdman = jobj.toJavaObject(PDMan.class);
 		StateGrid sg = new StateGrid();
 		List<Module> modules = sg.builderModules(pdman);
