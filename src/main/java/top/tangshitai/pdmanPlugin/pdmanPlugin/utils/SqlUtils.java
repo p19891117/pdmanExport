@@ -14,17 +14,26 @@ import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Module;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Node;
 
 public class SqlUtils {
+	/**
+	 * 匹配数据表结构
+	 */
+	public static final String reg_table="CREATE TABLE \"stategrid\".\"([\\w\\d_]+)\"([^;]+);";
+	/**
+	 * 匹配数据表结构中的每一列
+	 */
+	public static final String reg_record="\"([\\w\\d_]+)\"\\s+(bytea|varchar|char|text|numeric|int2|int4|float8|int8|bool|timestamp|date)(\\(\\d+\\))*.*";
 	public static StringBuilder sb = null;
 	
 	public static List<String[]> sqlToListForTable(String fname){
 		List<String[]> tableStrs = new ArrayList<>();
-		Pattern p = Pattern.compile("CREATE TABLE \"stategrid\".\"([a-zA-Z_]+)\"([^;]+);");
+		Pattern p = Pattern.compile(reg_table);
 		try {
 			sb = Utils.readFileContent(fname);
 			Matcher m = p.matcher(sb.toString());
 			while(m.find()) {
 				tableStrs.add(new String[]{m.group(1),m.group(2)});
 			}
+			System.out.println("解析出数据表结构总共："+tableStrs.size());
 			return tableStrs;
 		} catch (IOException e) {
 			System.out.println("读取sql脚本文件出错，程序停止");
@@ -47,7 +56,7 @@ public class SqlUtils {
 		fieldsStr = fieldsStr.substring(fieldsStr.indexOf("(")+1, fieldsStr.lastIndexOf(")")).trim();
 		
 		String[] fieldStrs = fieldsStr.split("\n");
-		Pattern p = Pattern.compile("\"([a-zA-Z0-9_]+)\"\\s+(varchar|char|text|numeric|int2|int4|float8|int8|bool|timestamp|date)(\\(\\d+\\))*.*");
+		Pattern p = Pattern.compile(reg_record);
 		List<Field> fields = new ArrayList<>();
 		for(String fieldStr:fieldStrs) {
 			if(StringUtils.isBlank(fieldStr)) 
@@ -173,6 +182,8 @@ public class SqlUtils {
 			return "DateTime";
 		}else if("date".equals(sqlType)) {
 			return "Date";
+		}else if("bytea".equals(sqlType)) {
+			return "Binary";
 		}else {
 			throw new IllegalArgumentException("不合法参数类型:"+sqlType);
 		}

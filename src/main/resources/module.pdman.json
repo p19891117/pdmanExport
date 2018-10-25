@@ -241,6 +241,21 @@
             "type": "Date"
           }
         }
+      },
+      {
+        "name": "二进制文件",
+        "code": "Binary",
+        "apply": {
+          "MYSQL": {
+            "type": "BLOB"
+          },
+          "ORACLE": {
+            "type": "BLOB"
+          },
+          "JAVA": {
+            "type": "byte[]"
+          }
+        }
       }
     ],
     "database": [
@@ -286,5 +301,20 @@
         "updateTableComment": ""
       }
     ]
+  },
+  "profile": {
+    "defaultFields": [
+      {
+        "name": "id",
+        "type": "DefaultString",
+        "remark": "",
+        "chnname": "主键",
+        "pk": true,
+        "notNull": true
+      }
+    ],
+    "javaConfig": {},
+    "sqlConfig": "--",
+    "dbs": []
   }
 }
