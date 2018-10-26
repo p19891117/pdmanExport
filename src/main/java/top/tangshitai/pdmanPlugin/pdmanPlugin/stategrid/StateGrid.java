@@ -1,5 +1,8 @@
 package top.tangshitai.pdmanPlugin.pdmanPlugin.stategrid;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +24,17 @@ public class StateGrid {
 			SqlUtils.setEntitieToModule(modules, entitie);
 		}
 		return modules;
+	}
+	private void tableNameTofile(String[] sqlstr) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter("table_comment.properties",true));
+			writer.write(sqlstr[0]+"=");
+			writer.newLine();
+			writer.flush();
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
 

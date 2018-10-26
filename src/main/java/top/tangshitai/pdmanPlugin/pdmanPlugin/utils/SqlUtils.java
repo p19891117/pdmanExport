@@ -3,6 +3,7 @@ package top.tangshitai.pdmanPlugin.pdmanPlugin.utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,6 +15,15 @@ import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Module;
 import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Node;
 
 public class SqlUtils {
+	public static final Properties tableComment= new Properties();
+	static {
+		try {
+			tableComment.load(SqlUtils.class.getClassLoader().getResourceAsStream("table_comment.properties"));
+		} catch (IOException e) {
+			System.out.println("加载表名与注释映射配置文件失败,程序退出");
+			System.exit(0);
+		}
+	}
 	/**
 	 * 匹配数据表结构
 	 */
@@ -31,7 +41,19 @@ public class SqlUtils {
 			sb = Utils.readFileContent(fname);
 			Matcher m = p.matcher(sb.toString());
 			while(m.find()) {
-				tableStrs.add(new String[]{m.group(1),m.group(2)});
+				//表名内容处理
+				String tablename = m.group(1);
+				if(StringUtils.isBlank(tablename)) {
+					throw new IllegalArgumentException("解析出的表名为空");
+				}
+				tablename = tablename.trim();
+				//表结构内容处理
+				String tableConstruct = m.group(2);
+				if(StringUtils.isBlank(tableConstruct)) {
+					throw new IllegalArgumentException("解析出的表名为空");
+				}
+				tableConstruct = tableConstruct.trim();
+				tableStrs.add(new String[]{tablename,tableConstruct});
 			}
 			System.out.println("解析出数据表结构总共："+tableStrs.size());
 			return tableStrs;
@@ -45,7 +67,8 @@ public class SqlUtils {
 	public static Entitie tableStrToObj(String tablename, String fieldsStr){
 		Entitie table = new Entitie();
 		table.setTitle(tablename);
-		table.setChnname(tablename);
+		String comment = StringUtils.isBlank(tableComment.getProperty(tablename))?tablename:tableComment.getProperty(tablename);
+		table.setChnname(comment);
 		if(StringUtils.isBlank(fieldsStr)) {
 			throw new IllegalArgumentException("数据表结构内容不能为空");
 		}
