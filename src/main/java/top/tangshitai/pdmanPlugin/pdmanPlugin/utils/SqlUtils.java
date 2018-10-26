@@ -3,7 +3,9 @@ package top.tangshitai.pdmanPlugin.pdmanPlugin.utils;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -16,9 +18,11 @@ import top.tangshitai.pdmanPlugin.pdmanPlugin.bean.Node;
 
 public class SqlUtils {
 	public static final Properties tableComment= new Properties();
+	public static final Properties moduleTypes= new Properties();
 	static {
 		try {
 			tableComment.load(SqlUtils.class.getClassLoader().getResourceAsStream("table_comment.properties"));
+			moduleTypes.load(SqlUtils.class.getClassLoader().getResourceAsStream("modules.properties"));
 		} catch (IOException e) {
 			System.out.println("加载表名与注释映射配置文件失败,程序退出");
 			System.exit(0);
@@ -111,31 +115,15 @@ public class SqlUtils {
 	}
 	public static void setEntitieToModule(List<Module> modules,Entitie e) {
 		String modulename = null;
-		if(e.getTitle().startsWith("t_cbm_")) {//检修
-			modulename = "检修t_cbm";
-		}else if(e.getTitle().startsWith("t_detect_")){//检测
-			modulename = "检测t_detect";
-		}else if(e.getTitle().startsWith("t_levt_")){//评价
-			modulename = "评价t_levt";
-		}else if(e.getTitle().startsWith("t_pub_")){//公用
-			modulename = "公用t_pub";
-		}else if(e.getTitle().startsWith("t_rtr_")){//抢修
-			modulename = "抢修t_rtr";
-		}else if(e.getTitle().startsWith("t_run_")){//运维
-			modulename = "运维t_run";
-		}else if(e.getTitle().startsWith("t_sevt_")){//评价
-			modulename = "评价t_sevt";
-		}else if(e.getTitle().startsWith("t_ys_")){//验收
-			modulename = "验收t_ys";
-		}else if(e.getTitle().startsWith("t_sec_")){
-			modulename = "t_sec";
-		}else if(e.getTitle().startsWith("t_equ_")){
-			modulename = "t_equ";
-		}else if(e.getTitle().startsWith("t_user_")){
-			modulename = "t_user";
-		}else {
-			modulename = "其他other";
+		Set<Entry<Object, Object>> entries = moduleTypes.entrySet();
+		for(Entry<Object, Object> entry:entries) {
+			String type = (String) entry.getKey();
+			String value = (String) entry.getValue();
+			if(!e.getTitle().startsWith(type)) continue;
+			modulename = value;
+			break;
 		}
+		modulename = StringUtils.isBlank(modulename)?moduleTypes.getProperty("other"):modulename;
 		for(Module m:modules) {
 			if(m.getName().equals(modulename)) {
 				m.getEntities().add(e);
